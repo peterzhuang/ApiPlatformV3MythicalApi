@@ -13,6 +13,7 @@ use App\Repository\DragonTreasureRepository;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
 #[ApiResource(
@@ -27,6 +28,12 @@ use Doctrine\ORM\Mapping as ORM;
         new Put(),
         new Patch(),
         // new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['treasure:read']
+    ],
+    denormalizationContext: [
+        'groups' => ['treasure:write']
     ]
 )]
 class DragonTreasure
@@ -37,25 +44,29 @@ class DragonTreasure
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['treasure:read', 'treasure:write'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups('treasure:read')]
     private ?string $description = null;
 
     /**
      * The estimated value of this treasure, in gold coins.
      */
     #[ORM\Column]
+    #[Groups(['treasure:read', 'treasure:write'])]
     private ?int $value = null;
 
     #[ORM\Column]
+    #[Groups(['treasure:read', 'treasure:write'])]
     private ?int $coolFactor = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $plunderedAt;
 
     #[ORM\Column]
-    private ?bool $isPublished = null;
+    private bool $isPublished = false;
 
     public function __construct()
     {
@@ -84,13 +95,14 @@ class DragonTreasure
         return $this->description;
     }
 
-    // public function setDescription(string $description): self
-    // {
-    //     $this->description = $description;
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
+    #[Groups(['treasure:write'])]
     public function setTextDescription(string $description): self
     {
         $this->description = nl2br($description);
@@ -130,17 +142,18 @@ class DragonTreasure
     /**
      * A human-readable representation of when this treasure was plundered. 
      */
+    #[Groups(['treasure:read'])]
     public function getPlunderedAtAgo(): string
     {
         return Carbon::instance($this->plunderedAt)->diffForHumans();
     }
 
-    // public function setPlunderedAt(\DateTimeImmutable $plunderedAt): self
-    // {
-    //     $this->plunderedAt = $plunderedAt;
+    public function setPlunderedAt(\DateTimeImmutable $plunderedAt): self
+    {
+        $this->plunderedAt = $plunderedAt;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getIsPublished(): ?bool
     {
