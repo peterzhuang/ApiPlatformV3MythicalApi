@@ -43,6 +43,13 @@ use function Symfony\Component\String\u;
         'groups' => ['treasure:write']
     ],
     paginationItemsPerPage: 10,
+    formats: [
+        'jsonld',
+        'json',
+        'html',
+        'jsonhal',
+        'csv' => 'text/csv'
+    ]
 )]
 // #[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
 #[ApiFilter(PropertyFilter::class)]
