@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 // use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
@@ -56,6 +57,20 @@ use function Symfony\Component\String\u;
         'jsonhal',
         'csv' => 'text/csv'
     ]
+)]
+#[ApiResource(
+    shortName: 'Treasure',
+    uriTemplate: '/users/{user_id}/treasures.{_format}',
+    operations: [new GetCollection()],
+    uriVariables: [
+        'user_id' => new Link(
+            fromProperty: 'dragonTreasures',
+            fromClass: User::class
+        )
+    ],
+    normalizationContext: [
+        'groups' => ['treasure:read']
+    ],
 )]
 // #[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
 #[ApiFilter(PropertyFilter::class)]
