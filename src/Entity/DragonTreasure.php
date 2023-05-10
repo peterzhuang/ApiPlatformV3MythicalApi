@@ -69,14 +69,14 @@ class DragonTreasure
     #[ORM\Column(length: 255)]
     #[Groups(['treasure:read', 'treasure:write', 'user:read'])]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50, maxMessage: 'Describe your loot in 50 chars or less')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups('treasure:read')]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     /**
@@ -104,6 +104,7 @@ class DragonTreasure
     #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['treasure:read', 'treasure:write'])]
+    #[Assert\Valid]
     private ?User $owner = null;
 
     public function __construct(string $name = null)
