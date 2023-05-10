@@ -31,7 +31,11 @@ use function Symfony\Component\String\u;
     operations: [
         // new Get(uriTemplate: '/dragon-plunder/{id}'),
         // new GetCollection(uriTemplate: '/dragon-plunder'),
-        new Get(),
+        new Get(
+            normalizationContext: [
+                'groups' => ['treasure:read', 'treasure:item:get']
+            ]
+        ),
         new GetCollection(),
         new Post(),
         new Put(),
@@ -63,7 +67,7 @@ class DragonTreasure
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['treasure:read', 'treasure:write'])]
+    #[Groups(['treasure:read', 'treasure:write', 'user:read'])]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     #[Assert\NotBlank()]
     #[Assert\Length(min: 2, max: 50, maxMessage: 'Describe your loot in 50 chars or less')]
@@ -79,7 +83,7 @@ class DragonTreasure
      * The estimated value of this treasure, in gold coins.
      */
     #[ORM\Column]
-    #[Groups(['treasure:read', 'treasure:write'])]
+    #[Groups(['treasure:read', 'treasure:write', 'user:read'])]
     #[ApiFilter(RangeFilter::class)]
     #[Assert\GreaterThanOrEqual(0)]
     private ?int $value = 0;
