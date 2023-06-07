@@ -82,8 +82,9 @@ const handleSubmit = async () => {
 
     if (!response.ok) {
         const data = await response.json();
-        console.log(data);
-        // TODO: set error
+        // console.log(data);
+        // // TODO: set error
+        error.value = data.error;
 
         return;
     }

@@ -17,6 +17,12 @@ class AppFixtures extends Fixture
         // $manager->flush();
 
         // DragonTreasureFactory::createMany(40);
+
+        UserFactory::createOne([
+            'email' => 'bernie@dragonmail.com',
+            'password' => 'roar',
+        ]);
+        
         UserFactory::createMany(10);
         DragonTreasureFactory::createMany(40, function() {
             return [
